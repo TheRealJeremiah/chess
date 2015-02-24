@@ -17,6 +17,10 @@ class Piece
   def add(pos, dir)
     [(pos[0] + dir[0]), (pos[1] + dir[1])]
   end
+
+  def move_to(pos)
+    @pos = pos
+  end
 end
 
 class SlidingPiece < Piece
@@ -97,14 +101,47 @@ class King < SteppingPiece
 end
 
 class Pawn < Piece
+  def initialize(pos, color, board)
+    super
+    @moved = false
+  end
 
+  def possible_moves
+    moves = []
+    if @color == :black
+      new_pos = add(@pos, [1,0])
+      moves << new_pos if @board.empty?(new_pos)
+      new_pos = add(@pos, [2,0])
+      moves << new_pos if @board.empty?(new_pos) && !@moved
+      new_pos = add(@pos, [1,1])
+      moves << new_pos if @board.color_at(new_pos) == :white
+      new_pos = add(@pos, [1,-1])
+      moves << new_pos if @board.color_at(new_pos) == :white
+    else
+      new_pos = add(@pos, [-1,0])
+      moves << new_pos if @board.empty?(new_pos)
+      new_pos = add(@pos, [-2,0])
+      moves << new_pos if @board.empty?(new_pos) && !@moved
+      new_pos = add(@pos, [-1,1])
+      moves << new_pos if @board.color_at(new_pos) == :black
+      new_pos = add(@pos, [-1,-1])
+      moves << new_pos if @board.color_at(new_pos) == :black
+    end
+    
+    moves
+  end
+
+  def move_to(pos)
+    super
+    @moved = true
+  end
 end
 
 class Board
 
   def initialize
     @squares = Array.new(8) { Array.new(8) }
-    @squares[5][5] = Queen.new([5,5], :white, self)
+    @squares[1][1] = Queen.new([5,5], :white, self)
   end
 
   def check(color)
@@ -113,9 +150,18 @@ class Board
   def dup
   end
 
+  def off_board?(pos)
+    row, col = pos
+    if row < 0 || row > 7 || col < 0 || col > 7
+      return true
+    end
+
+    false
+  end
+
   def empty?(space)
     row, col = space
-    if row < 0 || row > 7 || col < 0 || col > 7
+    if off_board?(space)
       return false
     end
 
@@ -124,7 +170,7 @@ class Board
 
   def color_at(pos)
     row, col = pos
-    return nil if row < 0 || row > 7 || col < 0 || col > 7
+    return nil if off_board?(pos) || @squares[row][col].nil?
     @squares[pos[0]][pos[1]].color
   end
 end
