@@ -7,6 +7,8 @@ class SlidingPiece < Piece
     moves
   end
 
+  private
+
   def moves_in_direction(direction)
     moves = []
     current_pos = add(@pos, direction)
@@ -36,6 +38,8 @@ class Rook < SlidingPiece
     @icon = '♜' if color == :black
   end
 
+  private
+
   def move_dirs
     [[1, 0], [0, 1], [-1, 0], [0, -1]]
   end
@@ -49,6 +53,8 @@ class Bishop <SlidingPiece
     @icon = '♝' if color == :black
   end
 
+  private
+
   def move_dirs
     [[1, 1], [1, -1], [-1, 1], [-1, -1]]
   end
@@ -60,6 +66,8 @@ class Queen <SlidingPiece
     @icon = '♕' if color == :white
     @icon = '♛' if color == :black
   end
+
+  private
 
   def move_dirs
     [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]

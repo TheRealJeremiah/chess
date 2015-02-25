@@ -13,6 +13,8 @@ class SteppingPiece < Piece
     possible
   end
 
+  private
+
   def moves
     raise "Moves not implemented!"
   end
@@ -25,6 +27,8 @@ class Knight < SteppingPiece
     @icon = '♞' if color == :black
   end
 
+  private
+
   def moves
     [[-2, 1], [-1, 2], [1, 2], [2, 1], [2, -1], [1, -2], [-1, -2], [-2, -1]]
   end
@@ -36,6 +40,8 @@ class King < SteppingPiece
     @icon = '♔' if color == :white
     @icon = '♚' if color == :black
   end
+
+  private
 
   def moves
     [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]

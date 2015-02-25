@@ -11,15 +11,17 @@ class Piece
     raise NotImplementedError.new("Moves not implemented")
   end
 
-  def add(pos, dir)
-    [(pos[0] + dir[0]), (pos[1] + dir[1])]
-  end
-
   def move_to(pos)
     @pos = pos
   end
 
   def dup(board)
     self.class.new(@pos.dup, @color, board)
+  end
+
+  protected
+
+  def add(pos, dir)
+    [(pos[0] + dir[0]), (pos[1] + dir[1])]
   end
 end

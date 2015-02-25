@@ -38,6 +38,8 @@ class Game
     puts "Check mate! #{opposite_color(turn).to_s.upcase} WINS!"
   end
 
+  private
+  
   def parse(input)
     letters = ('a'..'h').to_a
     col1 = letters.index(input[0])

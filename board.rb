@@ -5,36 +5,6 @@ class Board
     set_pieces
   end
 
-  def set_pieces
-
-    @squares[7][0] = Rook.new([7,0], :white, self)
-    @squares[7][1] = Knight.new([7,1], :white, self)
-    @squares[7][2] = Bishop.new([7,2], :white, self)
-    @squares[7][3] = Queen.new([7,3], :white, self)
-    @squares[7][4] = King.new([7,4], :white, self)
-    @squares[7][5] = Bishop.new([7,5], :white, self)
-    @squares[7][6] = Knight.new([7,6], :white, self)
-    @squares[7][7] = Rook.new([7,7], :white, self)
-
-    8.times do |col|
-      @squares[6][col] = Pawn.new([6,col], :white, self)
-    end
-
-    @squares[0][0] = Rook.new([0,0], :black, self)
-    @squares[0][1] = Knight.new([0,1], :black, self)
-    @squares[0][2] = Bishop.new([0,2], :black, self)
-    @squares[0][3] = Queen.new([0,3], :black, self)
-    @squares[0][4] = King.new([0,4], :black, self)
-    @squares[0][5] = Bishop.new([0,5], :black, self)
-    @squares[0][6] = Knight.new([0,6], :black, self)
-    @squares[0][7] = Rook.new([0,7], :black, self)
-
-    8.times do |col|
-      @squares[1][col] = Pawn.new([1,col], :black, self)
-    end
-
-  end
-
   def display
     puts "\n  a b c d e f g h"
     @squares.each_with_index do |row, idx|
@@ -73,28 +43,6 @@ class Board
     end
   end
 
-
-  def check?(color)
-    king_pos = nil
-    opp_moves = []
-
-    # king_pos = @squares.flatten.compact.find do |piece|
-    #   piece.is_a?(King) && piece.color == color
-    # end.pos
-
-    @squares.each_with_index do |row, row_num|
-      row.each_with_index do |piece, col_num|
-        if piece.is_a?(King) && piece.color == color
-          king_pos = [row_num, col_num]
-        elsif !piece.nil? && piece.color != color
-          opp_moves += piece.possible_moves
-        end
-      end
-    end
-
-    opp_moves.include?(king_pos)
-  end
-
   def check_mate?(color)
     pieces = @squares.flatten.compact.select{|piece| piece.color == color}
     pieces.each do |piece|
@@ -128,9 +76,9 @@ class Board
     new_board
   end
 
-  def off_board?(pos)
-    row, col = pos
-    row < 0 || row > 7 || col < 0 || col > 7
+  def check_turn(from, color)
+    row, col = from
+    @squares[row][col].color == color
   end
 
   def empty?(space)
@@ -148,12 +96,62 @@ class Board
     @squares[pos[0]][pos[1]].color
   end
 
+  protected
+
   def set_square(loc, piece)
     @squares[loc[0]][loc[1]] = piece
   end
 
-  def check_turn(from, color)
-    row, col = from
-    @squares[row][col].color == color
+  def check?(color)
+    king_pos = nil
+    opp_moves = []
+
+    @squares.each_with_index do |row, row_num|
+      row.each_with_index do |piece, col_num|
+        if piece.is_a?(King) && piece.color == color
+          king_pos = [row_num, col_num]
+        elsif !piece.nil? && piece.color != color
+          opp_moves += piece.possible_moves
+        end
+      end
+    end
+
+    opp_moves.include?(king_pos)
+  end
+
+  private
+
+  def set_pieces
+    @squares[7][0] = Rook.new([7,0], :white, self)
+    @squares[7][1] = Knight.new([7,1], :white, self)
+    @squares[7][2] = Bishop.new([7,2], :white, self)
+    @squares[7][3] = Queen.new([7,3], :white, self)
+    @squares[7][4] = King.new([7,4], :white, self)
+    @squares[7][5] = Bishop.new([7,5], :white, self)
+    @squares[7][6] = Knight.new([7,6], :white, self)
+    @squares[7][7] = Rook.new([7,7], :white, self)
+
+    8.times do |col|
+      @squares[6][col] = Pawn.new([6,col], :white, self)
+    end
+
+    @squares[0][0] = Rook.new([0,0], :black, self)
+    @squares[0][1] = Knight.new([0,1], :black, self)
+    @squares[0][2] = Bishop.new([0,2], :black, self)
+    @squares[0][3] = Queen.new([0,3], :black, self)
+    @squares[0][4] = King.new([0,4], :black, self)
+    @squares[0][5] = Bishop.new([0,5], :black, self)
+    @squares[0][6] = Knight.new([0,6], :black, self)
+    @squares[0][7] = Rook.new([0,7], :black, self)
+
+    8.times do |col|
+      @squares[1][col] = Pawn.new([1,col], :black, self)
+    end
+  end
+
+
+  def off_board?(pos)
+    row, col = pos
+    row < 0 || row > 7 || col < 0 || col > 7
   end
 end
