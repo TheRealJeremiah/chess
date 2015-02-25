@@ -59,6 +59,12 @@ class Board
     moves = piece.possible_moves
 
     if moves.include?(to)
+      new_board = self.dup
+      new_board.set_square(to, piece.dup(new_board))
+      new_board.set_square(from, nil)
+      if new_board.check(piece.color)
+        raise ArgumentError.new("That puts you in check!")
+      end
       @squares[row2][col2] = @squares[row1][col1]
       @squares[row1][col1] = nil
       @squares[row2][col2].move_to(to)
@@ -69,9 +75,36 @@ class Board
 
 
   def check(color)
+    king_pos = nil
+    opp_moves = []
+
+    @squares.each_with_index do |row, row_num|
+      row.each_with_index do |piece, col_num|
+        if piece.is_a?(King) && piece.color == color
+          king_pos = [row_num, col_num]
+        elsif !piece.nil? && piece.color != color
+          opp_moves += piece.possible_moves
+        end
+      end
+    end
+
+    opp_moves.include?(king_pos)
   end
 
   def dup
+    new_board = Board.new
+
+    @squares.each_with_index do |row, row_num|
+      row.each_with_index do |square, col_num|
+        if !square.nil?
+          new_board.set_square([row_num, col_num], square.dup(new_board))
+        else
+          new_board.set_square([row_num, col_num], nil)
+        end
+      end
+    end
+
+    new_board
   end
 
   def off_board?(pos)
@@ -96,5 +129,9 @@ class Board
     row, col = pos
     return nil if off_board?(pos) || @squares[row][col].nil?
     @squares[pos[0]][pos[1]].color
+  end
+
+  def set_square(loc, piece)
+    @squares[loc[0]][loc[1]] = piece
   end
 end

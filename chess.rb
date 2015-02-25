@@ -14,6 +14,7 @@ class Game
       from, to = parse(input)
       @board.move(from, to)
       @board.display
+      #puts @board.check(:white)
     end
   end
 
@@ -32,4 +33,16 @@ end
 if __FILE__ == $PROGRAM_NAME
   g = Game.new
   g.play_game
+  # b = Board.new
+  # b.display
+  # b.move([6,4],[4,4])
+  # b.display
+  #
+  # b2 = b.dup
+  # b2.display
+  #
+  # b2.move([6,3],[5,3])
+  # b2.display
+  # b.display
+
 end

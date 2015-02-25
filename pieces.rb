@@ -19,6 +19,9 @@ class Piece
     @pos = pos
   end
 
+  def dup(board)
+    self.class.new(@pos.dup, @color, board)
+  end
 end
 
 class SlidingPiece < Piece
@@ -54,9 +57,11 @@ class Rook < SlidingPiece
     @icon = '♖' if color == :white
     @icon = '♜' if color == :black
   end
+
   def move_dirs
     [[1, 0], [0, 1], [-1, 0], [0, -1]]
   end
+
 end
 
 class Bishop <SlidingPiece
