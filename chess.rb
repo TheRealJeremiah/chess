@@ -12,13 +12,24 @@ class Game
 
     until @board.check_mate?(turn)
       puts "#{turn.to_s.capitalize}\'s turn to move:"
-      input = gets.chomp
-      from, to = parse(input)
-      if !@board.check_turn(from, turn)
-        puts "Wrong color! Try again!"
-        next
+
+      begin
+        input = gets.chomp
+        from, to = parse(input)
+        if !@board.check_turn(from, turn)
+          puts "Wrong color! Try again!"
+          next
+        end
+          @board.move(from, to)
+
+        rescue ArgumentError => e
+          puts e
+          retry
+        rescue NotImplemented => e
+          puts e
+          return nil
       end
-      @board.move(from, to)
+
       @board.display
       #puts @board.check(:white)
       turn = opposite_color(turn)

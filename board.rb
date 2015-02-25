@@ -62,7 +62,7 @@ class Board
       new_board = self.dup
       new_board.set_square(to, piece.dup(new_board))
       new_board.set_square(from, nil)
-      if new_board.check(piece.color)
+      if new_board.check?(piece.color)
         raise ArgumentError.new("That puts you in check!")
       end
       @squares[row2][col2] = @squares[row1][col1]
@@ -74,7 +74,7 @@ class Board
   end
 
 
-  def check(color)
+  def check?(color)
     king_pos = nil
     opp_moves = []
 
@@ -103,7 +103,7 @@ class Board
         new_board.set_square(to, piece)
         new_board.set_square(piece.pos, nil)
 
-        if !new_board.check(color)
+        if !new_board.check?(color)
           return false
         end
       end
@@ -130,11 +130,7 @@ class Board
 
   def off_board?(pos)
     row, col = pos
-    if row < 0 || row > 7 || col < 0 || col > 7
-      return true
-    end
-
-    false
+    row < 0 || row > 7 || col < 0 || col > 7
   end
 
   def empty?(space)
@@ -157,7 +153,7 @@ class Board
   end
 
   def check_turn(from, color)
-    row,col = from
+    row, col = from
     @squares[row][col].color == color
   end
 end
