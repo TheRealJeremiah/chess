@@ -8,14 +8,23 @@ class Game
 
   def play_game
     @board.display
+    turn = :white
 
-    while true
+    until @board.check_mate?(turn)
+      puts "#{turn.to_s.capitalize}\'s turn to move:"
       input = gets.chomp
       from, to = parse(input)
+      if !@board.check_turn(from, turn)
+        puts "Wrong color! Try again!"
+        next
+      end
       @board.move(from, to)
       @board.display
       #puts @board.check(:white)
+      turn = opposite_color(turn)
     end
+
+    puts "Check mate! #{opposite_color(turn).to_s.upcase} WINS!"
   end
 
   def parse(input)
@@ -26,6 +35,16 @@ class Game
     row2 = 8 - input[4].to_i
 
     [[row1,col1],[row2,col2]]
+  end
+
+  def opposite_color(color)
+    if color == :white
+      return :black
+    elsif color == :black
+      return :white
+    else
+      return nil
+    end
   end
 end
 

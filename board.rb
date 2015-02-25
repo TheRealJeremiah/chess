@@ -36,7 +36,7 @@ class Board
   end
 
   def display
-    puts "  a b c d e f g h"
+    puts "\n  a b c d e f g h"
     @squares.each_with_index do |row, idx|
       string = (8-idx).to_s + " "
       row.each do |col|
@@ -78,6 +78,10 @@ class Board
     king_pos = nil
     opp_moves = []
 
+    # king_pos = @squares.flatten.compact.find do |piece|
+    #   piece.is_a?(King) && piece.color == color
+    # end.pos
+
     @squares.each_with_index do |row, row_num|
       row.each_with_index do |piece, col_num|
         if piece.is_a?(King) && piece.color == color
@@ -89,6 +93,23 @@ class Board
     end
 
     opp_moves.include?(king_pos)
+  end
+
+  def check_mate?(color)
+    pieces = @squares.flatten.compact.select{|piece| piece.color == color}
+    pieces.each do |piece|
+      piece.possible_moves.each do |to|
+        new_board = self.dup
+        new_board.set_square(to, piece)
+        new_board.set_square(piece.pos, nil)
+
+        if !new_board.check(color)
+          return false
+        end
+      end
+    end
+
+    true
   end
 
   def dup
@@ -133,5 +154,10 @@ class Board
 
   def set_square(loc, piece)
     @squares[loc[0]][loc[1]] = piece
+  end
+
+  def check_turn(from, color)
+    row,col = from
+    @squares[row][col].color == color
   end
 end
