@@ -4,6 +4,7 @@ class Pawn < Piece
     @moved = false
     @icon = '♙' if color == :white
     @icon = '♟' if color == :black
+    @value = 1
   end
 
   def possible_moves

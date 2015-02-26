@@ -1,22 +1,27 @@
 require_relative 'pieces'
 require_relative 'board'
+require_relative 'players'
+require 'colorize'
 
 class Game
-  def initialize
+  def initialize(player1, player2)
     @board = Board.new
+    @player1 = player1
+    @player1.color = :white
+    @player2 = player2
+    @player2.color = :black
   end
 
   def play_game
     @board.display
-    turn = :white
+    current_player = @player1
 
-    until @board.check_mate?(turn)
-      puts "#{turn.to_s.capitalize}\'s turn to move:"
+    until @board.check_mate?(current_player.color)
+      puts "#{current_player.color.to_s.capitalize}\'s turn to move:"
 
       begin
-        input = gets.chomp
-        from, to = parse(input)
-        if !@board.check_turn(from, turn)
+        from, to = current_player.input(@board.dup)
+        if !@board.check_turn(from, current_player.color)
           puts "Wrong color! Try again!"
           next
         end
@@ -31,50 +36,33 @@ class Game
       end
 
       @board.display
-      #puts @board.check(:white)
-      turn = opposite_color(turn)
+      current_player = switch_player(current_player)
     end
 
-    puts "Check mate! #{opposite_color(turn).to_s.upcase} WINS!"
+    puts "Check mate! #{switch_player(current_player).color.to_s.upcase} WINS!"
   end
 
   private
-  
-  def parse(input)
-    letters = ('a'..'h').to_a
-    col1 = letters.index(input[0])
-    row1 = 8 - input[1].to_i
-    col2 = letters.index(input[3])
-    row2 = 8 - input[4].to_i
 
-    [[row1,col1],[row2,col2]]
-  end
-
-  def opposite_color(color)
-    if color == :white
-      return :black
-    elsif color == :black
-      return :white
-    else
-      return nil
-    end
+  def switch_player(player)
+    player == @player1 ? @player2 : @player1
   end
 end
 
 
 if __FILE__ == $PROGRAM_NAME
-  g = Game.new
-  g.play_game
-  # b = Board.new
-  # b.display
-  # b.move([6,4],[4,4])
-  # b.display
+  # hum1 = HumanPlayer.new
+  # hum2 = ComputerPlayer.new
   #
-  # b2 = b.dup
-  # b2.display
-  #
-  # b2.move([6,3],[5,3])
-  # b2.display
-  # b.display
+  # g = Game.new(hum1, hum2)
+  # g.play_game
+
+  b = Board.new
+  b.move([6,5],[5,5])
+  b.move([1,4],[3,4])
+  b.move([6,6],[4,6])
+
+  n = BoardNode.new(b, :white, 0, 0)
+  p n.dfs
 
 end

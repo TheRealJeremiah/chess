@@ -1,4 +1,5 @@
 class Board
+  attr_reader :squares
 
   def initialize
     @squares = Array.new(8) { Array.new(8) }
@@ -9,13 +10,14 @@ class Board
     puts "\n  a b c d e f g h"
     @squares.each_with_index do |row, idx|
       string = (8-idx).to_s + " "
-      row.each do |col|
+      row.each_with_index do |col, idy|
+        color = (idx + idy).even? ? :light_blue : :white
         if col.nil?
-          string += "_"
+          string += " ".colorize(:color => :black, :background => color)
         else
-          string += col.icon
+          string += col.icon.colorize(:color => :black, :background => color)
         end
-        string += " "
+        string += " ".colorize(:color => :black, :background => color)
       end
       puts string
     end

@@ -36,6 +36,7 @@ class Rook < SlidingPiece
     super
     @icon = '♖' if color == :white
     @icon = '♜' if color == :black
+    @value = 5
   end
 
   private
@@ -51,6 +52,7 @@ class Bishop <SlidingPiece
     super
     @icon = '♗' if color == :white
     @icon = '♝' if color == :black
+    @value = 3
   end
 
   private
@@ -65,6 +67,7 @@ class Queen <SlidingPiece
     super
     @icon = '♕' if color == :white
     @icon = '♛' if color == :black
+    @value = 9
   end
 
   private

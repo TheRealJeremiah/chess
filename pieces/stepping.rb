@@ -25,6 +25,7 @@ class Knight < SteppingPiece
     super
     @icon = '♘' if color == :white
     @icon = '♞' if color == :black
+    @value = 3
   end
 
   private
@@ -39,6 +40,7 @@ class King < SteppingPiece
     super
     @icon = '♔' if color == :white
     @icon = '♚' if color == :black
+    @value = 1000
   end
 
   private
