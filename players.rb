@@ -20,14 +20,18 @@ class ComputerPlayer
   attr_accessor :color
 
   def input(board)
-    @squares = board.squares
+    # @squares = board.squares
+    move_tree = BoardNode.new(board, @color, 0, 0)
 
-    if all_captures.empty?
-      all_possible_moves.sample
-    else
-      sort_captures.first
-    end
+    move_tree.best_move
+
+    # if all_captures.empty?
+    #   all_possible_moves.sample
+    # else
+    #   sort_captures.first
+    # end
   end
+
 
   # def current_pieces
   #   @squares.flatten.compact.select {|piece| piece.color == @color}
@@ -59,14 +63,23 @@ end
 
 class BoardNode
   MAX_DEPTH = 3
-  attr_reader :children, :value
-  def initialize(board, color, depth, value)
+  attr_reader :children, :value, :last_move
+  def initialize(board, color, depth, value, last_move = [])
     @board = board
     @depth = depth
     @color = color
     @value = value
     @children = []
+    @last_move = last_move
     make_children
+  end
+
+  def best_move
+    sorted_children = @children.sort_by do |child|
+      child.value
+    end
+
+    sorted_children.last.last_move
   end
 
   def dfs
@@ -78,12 +91,12 @@ class BoardNode
       @children.each do |child|
         child_vals << child.dfs
       end
-      return @value + child_vals.max
+      @value += child_vals.max
     else
       @children.each do |child|
         child_vals << child.dfs
       end
-      return @value + child_vals.min
+      @value += child_vals.min
     end
   end
 
@@ -92,14 +105,12 @@ class BoardNode
     all_possible_moves.each do |move|
       new_board = @board.dup
       begin
-        # val = 0
         from, to = move
         row, col = move[1]
         piece = new_board.squares[row][col]
-        # val = piece.value unless piece.nil?
         new_board.move(from, to)
         value = find_value(move)
-        @children << BoardNode.new(new_board, opposite_color(@color), @depth + 1, value)
+        @children << BoardNode.new(new_board, opposite_color(@color), @depth + 1, value, move)
       rescue
         next
       end

@@ -51,18 +51,18 @@ end
 
 
 if __FILE__ == $PROGRAM_NAME
-  # hum1 = HumanPlayer.new
-  # hum2 = ComputerPlayer.new
+  hum1 = ComputerPlayer.new
+  hum2 = ComputerPlayer.new
+
+  g = Game.new(hum1, hum2)
+  g.play_game
+
+  # b = Board.new
+  # b.move([6,5],[5,5])
+  # b.move([1,4],[3,4])
+  # b.move([6,6],[4,6])
   #
-  # g = Game.new(hum1, hum2)
-  # g.play_game
-
-  b = Board.new
-  b.move([6,5],[5,5])
-  b.move([1,4],[3,4])
-  b.move([6,6],[4,6])
-
-  n = BoardNode.new(b, :white, 0, 0)
-  p n.dfs
+  # n = BoardNode.new(b, :white, 0, 0)
+  # p n.dfs
 
 end

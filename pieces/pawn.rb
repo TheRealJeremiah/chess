@@ -36,4 +36,16 @@ class Pawn < Piece
     super
     @moved = true
   end
+
+  def dup(board)
+    p = Pawn.new(@pos.dup, @color, board)
+    p.moved = @moved
+    return p
+  end
+
+  protected
+
+  def moved=(value)
+    @moved = value
+  end
 end

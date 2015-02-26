@@ -41,7 +41,7 @@ class Board
       @squares[row1][col1] = nil
       @squares[row2][col2].move_to(to)
     else
-      raise ArgumentError.new("That piece cannot make that move!")
+      raise ArgumentError.new("That piece cannot make the move #{from}->#{to}!")
     end
   end
 
